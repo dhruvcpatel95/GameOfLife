@@ -60,7 +60,7 @@ else:
 
 
 def getInitialState():
-	# Get initial state of the game and save it to data/workingFile.csv
+	## Get initial state of the game and save it to data/workingFile.csv
 
 	#Check game type
 	if gameType == "R":
@@ -79,19 +79,30 @@ def getInitialState():
 
 
 def randomGame():
-	#Return initial state for a random game
+	##Return initial state for a random game
 
 	arr = np.random.randint(2, size = (n, n))
 	return arr
 
-def initializeGlider():
-	#Return initial state with glider placed in postion (row, column)
+def getLocationToPlace(placeWhat):
+	##Get (row, column) location data from user to place gilder/gosper glider
 
-	print("Where do you want to place your glider. Note the both row and column values must be between 0 and " , n-3, "inclusive.")
+	if(placeWhat == "G"):
+		rowConstraint = n-3
+		columnConstraint = n-3
+		print("Where do you want to place your glider. Note both row and column values must be between 0 and " , rowConstraint, "inclusive.")
+	elif(placeWhat == "GG"):
+		rowConstraint = n-9
+		columnConstraint = n-36
+		print("Where do you want to place your gosper glider.")
+		print("Note the row value must be between 0 and " , rowConstraint, "inclusive,")
+		print("and the column value must be between 0 and " , columnConstraint, "inclusive.")
+
+
 	while True:
 		try: 
 			row =  int(input("Enter the row where you want your glider to be placed: "))
-			if not((row >= 0 ) and row <= n-3):
+			if not((row >= 0 ) and row <= rowConstraint):
 				raise ValueError("Invalid value was entered for row.")
 			break
 		except ValueError as err:
@@ -99,11 +110,18 @@ def initializeGlider():
 	while True:
 		try: 
 			column =  int(input("Enter the column where you want your glider to be placed: "))
-			if not((column >= 0 ) and column <= n-3):
+			if not((column >= 0 ) and column <= columnConstraint):
 				raise ValueError("Invalid value was entered for row.")
 			break
 		except ValueError as err:
 			print(err)
+
+	return [row, column]
+
+def initializeGlider():
+	##Return initial state with glider placed in postion (row, column)
+
+	row, column = getLocationToPlace("G")
 
 	glider = np.zeros((n, n), dtype = bool)
 
@@ -117,27 +135,9 @@ def initializeGlider():
 	return glider
 
 def initializeGosperGlider():
-	#Return initial state with gosper glider placed in postion (row, column)
+	##Return initial state with gosper glider placed in postion (row, column)
 
-	print("Where do you want to place your glider.")
-	print("Note the row value must be between 0 and " , n-9, "inclusive,")
-	print("and the column value must be between 0 and " , n-36, "inclusive.")
-	while True:
-		try: 
-			row =  int(input("Enter the row where you want your glider to be placed: "))
-			if not((row >= 0 ) and row <= n-9):
-				raise ValueError("Invalid value was entered for row.")
-			break
-		except ValueError as err:
-			print(err)
-	while True:
-		try: 
-			column =  int(input("Enter the column where you want your glider to be placed: "))
-			if not((column >= 0 ) and column <= n-36):
-				raise ValueError("Invalid value was entered for row.")
-			break
-		except ValueError as err:
-			print(err)
+	row, column = getLocationToPlace("GG")
 
 	#Retrieve gosper glider from csv
 	gosperGliderSchematic = np.loadtxt(open("data/gosperGliderGun.csv", 'rb'), delimiter = ",", dtype = bool) 
