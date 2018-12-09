@@ -171,6 +171,32 @@ def getNextGen(currentState):
 	return nextState
 
 
+#Set up matplotlib figure
+fig=plt.figure()
+ax1 = fig.add_subplot(111)
+
+#set up initial state
+getInitialState()
+
+def animate(i):
+	currentState = np.loadtxt(open("data/workingFile.csv", "rb"), delimiter = ",", dtype = bool)
+
+	ax1.clear()
+	ax1.imshow(currentState)
+
+	currentState = getNextGen(currentState)
+	np.savetxt("data/workingFile.csv", currentState, delimiter = ",", fmt = '%d')
+   
+	
+#Start animation 
+ani = animation.FuncAnimation(fig, animate, interval = 100)
+plt.show()
+
+
+
+
+
+
 
 
 
