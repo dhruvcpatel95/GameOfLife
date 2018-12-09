@@ -150,26 +150,25 @@ def initializeGosperGlider():
 	return gosperGlider
 
 
-getInitialState()
-currentState = np.loadtxt(open("data/workingFile.csv", 'rb'), delimiter = ",", dtype = bool)
-plt.figure()
-plt.imshow(currentState)
-plt.show()
 
+def getNextGen(currentState):
+	##Get next generation with constant 0 boundry condition 
 
+	nextState = np.zeros((n, n), dtype = bool)
 
+	for index, value in np.ndenumerate(currentState):
+		liveNeighborsCount = currentState[max(0, index[0]-1):index[0]+2, max(0, index[1]-1):index[1]+2].sum() - currentState[index[0], index[1]]
+		
+		if(liveNeighborsCount < 2):
+			nextState[index[0], index[1]] = False
+		elif( (currentState[index[0], index[1]] == True) and ( (liveNeighborsCount == 2) or (liveNeighborsCount == 3) ) ):
+			nextState[index[0], index[1]] = True
+		elif( (currentState[index[0], index[1]] == True) and (liveNeighborsCount > 3) ):
+			nextState[index[0], index[1]] = False
+		elif( (currentState[index[0], index[1]] == False) and (liveNeighborsCount == 3) ):
+			nextState[index[0], index[1]] = True
 
-
-
-
-
-
-
-
-
-
-
-
+	return nextState
 
 
 
